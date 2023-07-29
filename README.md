@@ -365,7 +365,13 @@ cmd
 A command from the above list, when a label is provided to a relative address it
 is evaluated relative to the current address
 
-Example: ``` jmp foo ...  foo: ...  # jumps here
+Example:
+```
+  jmp foo
+  ...
+
+foo:
+  ...  # jumps here
 
 ```
 
