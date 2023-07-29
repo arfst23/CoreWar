@@ -1,0 +1,89 @@
+################################################################################
+
+width = 256
+step = 12
+frame = 5 * step
+range = 18 * width
+dist = 19 * width
+dst = src - dist
+len = end - src
+base = cnt + dist
+copies = 8
+
+################################################################################
+
+  jmp main
+
+# clear backward
+
+src:
+  cpy idx, off, src
+
+clear:
+  cpi src - step - 0 * frame, idx, idx
+  cpi src - step - 1 * frame, idx, idx
+  cpi src - step - 2 * frame, idx, idx
+  cpi src - step - 3 * frame, idx, idx
+
+  dec idx, 4 * frame
+  jgt clear, idx, -range
+
+  dec num
+  jle num, num, 0
+
+################################################################################
+
+# copy backward
+
+launch:
+  set idx, 0
+
+copy:
+  cpy dst + 0, src + 0, idx
+  cpy dst + 1, src + 1, idx
+  cpy dst + 2, src + 2, idx
+
+  inc idx, 3
+  jlt copy, idx, len
+
+  # jump to copy
+  jmp dst
+
+off:
+  dat
+
+num:
+  dat copies
+end:
+
+idx:
+  dat
+
+################################################################################
+
+main:
+  frk launch
+
+  cpy cnt, off, main
+loop:
+  cpi src - step - 0 * frame, cnt, cnt
+  cpi src - step - 1 * frame, cnt, cnt
+  cpi src - step - 2 * frame, cnt, cnt
+
+  cpi base - step - 0 * frame, cnt, cnt
+  cpi base - step - 1 * frame, cnt, cnt
+  cpi base - step - 2 * frame, cnt, cnt
+
+  dec cnt, 3 * frame
+  jgt loop, cnt, -range
+
+  dec off, step
+  jgt main, off, -frame
+
+  set off, 0
+  jmp main
+
+cnt:
+  dat
+
+################################################################################

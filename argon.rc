@@ -1,0 +1,106 @@
+################################################################################
+
+width = 256
+range = 19 * width
+step = 12
+
+dst = final + range
+len = end - final
+
+################################################################################
+
+# write jumps backward
+
+  jmp bwd
+
+bcatch:
+  jmp catch
+
+bwd:
+  # loop to pace jump commands
+  set bcnt, -step
+bloop:
+  cpi bcatch, bjmp, bcnt
+  cpi bcatch - step, bjmp, bcnt
+  cpi bcatch - 2 * step, bjmp, bcnt
+  cpi bcatch - 3 * step, bjmp, bcnt
+  dec bcnt, 4 * step
+  jgt bloop, bcnt, -range
+
+  jmp switch
+  
+bcnt:
+  dat
+
+bjmp:
+  jmp bjmp + step
+
+################################################################################
+
+catch:
+  frk catch
+  # replace jump in switch with jump in on to continue in final
+  cpy switch, on, catch
+  jmp catch
+
+################################################################################
+
+on:
+  jmp on + 1
+
+switch:
+  jmp fwd
+
+# when the opponent was caught
+
+final:
+  # clear forward and kill the fork loop after one round
+  set cnt, 1
+loop:
+  cpi end, cnt, cnt
+  cpi end + step, cnt, cnt
+  inc cnt, 2 * step
+  jlt loop, cnt, range
+
+  # copy forward
+  set cnt, 0
+copy:
+  cpy dst, final, cnt
+  cpy dst + 1, final + 1, cnt
+  inc cnt, 2
+  jlt copy, cnt, len
+
+  # jump to copy
+  jmp dst
+end:
+
+cnt:
+  dat
+
+################################################################################
+
+# write jumps forward
+
+fwd:
+  # loop to pace jump commands
+  set fcnt, step
+floop:
+  cpi fcatch, fjmp, fcnt
+  cpi fcatch + step, fjmp, fcnt
+  cpi fcatch + 2 * step, fjmp, fcnt
+  cpi fcatch + 3 * step, fjmp, fcnt
+  inc fcnt, 4 * step
+  jlt floop, fcnt, range
+
+  jmp bwd
+
+fcnt:
+  dat
+
+fjmp:
+  jmp fjmp - step
+
+fcatch:
+  jmp catch
+
+################################################################################

@@ -1,0 +1,32 @@
+################################################################################
+
+dist = 15 * 256 + 23
+dst = src + dist
+len = end - src
+step = 12
+
+################################################################################
+
+# clear and copy forward
+
+src:
+  set copy, 0
+  set clear, step
+loop:
+  cpy dst, src, copy
+  inc copy
+  cpi end, end, clear
+  cpi end + step, end, clear
+  inc clear, 2 * step 
+  jlt loop, copy, len
+
+  # jump to copy
+  jmp dst
+end:
+
+copy:
+  dat
+clear:
+  dat
+
+################################################################################

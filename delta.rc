@@ -1,0 +1,52 @@
+################################################################################
+
+width = 256
+offset = 16
+step = 2 * offset
+range = 6 * 256
+
+################################################################################
+
+frk start2
+
+start1:
+  set counter1, 0
+loop1:
+  cpi end + 0 * range + step, counter1, counter1
+  cpi end + 1 * range + step, counter1, counter1
+  cpi end + 2 * range + step, counter1, counter1
+
+  cpi end - 1 * range - step, counter1, counter1
+  cpi end - 2 * range - step, counter1, counter1
+  cpi end - 3 * range - step, counter1, counter1
+
+  inc counter1, step
+  jle loop1, counter1, range
+  jmp start1
+
+counter1:
+  dat
+
+################################################################################
+
+start2:
+  set counter2, 0
+loop2:
+  cpi end + offset + 0 * range + step, counter2, counter2
+  cpi end + offset + 1 * range + step, counter2, counter2
+  cpi end + offset + 2 * range + step, counter2, counter2
+
+  cpi end - offset - 1 * range - step, counter2, counter2
+  cpi end - offset - 2 * range - step, counter2, counter2
+  cpi end - offset - 3 * range - step, counter2, counter2
+
+  inc counter2, step
+  jle loop2, counter2, range
+  jmp start2
+
+counter2:
+  dat
+
+end:
+
+################################################################################

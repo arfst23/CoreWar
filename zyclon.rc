@@ -1,0 +1,179 @@
+################################################################################
+
+width = 256
+range = 5 * width
+step = 12
+off = 7
+
+len = end - src
+
+dist1 = 3 * range
+dst1 = src1 + dist1
+len1 = end1 - src1
+
+dist2 = 2 * range
+dst2 = src2 + dist2
+len2 = end2 - src2
+
+dist3 = 3 * range
+dst3 = src3 - dist3
+len3 = end3 - src3
+
+dist4 = 2 * range
+dst4 = src4 - dist4
+len4 = end4 - src4
+
+################################################################################
+
+src:
+  frk main4
+  frk main2
+
+  frk src3
+  # jmp src1
+
+################################################################################
+
+src1:
+  set cnt1, step + off
+clear1:
+  cpi end + 0 * range + 0 * step, cnt1, cnt1
+  cpi end + 0 * range + 3 * step, cnt1, cnt1
+
+  cpi end + 1 * range + 0 * step, cnt1, cnt1
+  cpi end + 1 * range + 3 * step, cnt1, cnt1
+
+  cpi end + 2 * range + 0 * step, cnt1, cnt1
+  cpi end + 2 * range + 3 * step, cnt1, cnt1
+
+  inc cnt1, 6 * step
+  jlt clear1, cnt1, range - len - 2 * step
+
+main1:
+  set cnt1, 0
+copy1:
+  cpy dst1 + 0, src1 + 0, cnt1
+  cpy dst1 + 1, src1 + 1, cnt1
+  cpy dst1 + 2, src1 + 2, cnt1
+  cpy dst1 + 3, src1 + 3, cnt1
+
+  inc cnt1, 4
+  jlt copy1, cnt1, len1
+
+  # jump to copy
+  jmp dst1
+end1:
+
+cnt1:
+  dat
+
+################################################################################
+
+src2:
+  set cnt2, step + off
+clear2:
+  cpi end + 0 * range + 1 * step, cnt2, cnt2
+  cpi end + 0 * range + 2 * step, cnt2, cnt2
+  cpi end + 0 * range + 4 * step, cnt2, cnt2
+  cpi end + 0 * range + 5 * step, cnt2, cnt2
+
+  cpi end + 1 * range + 1 * step, cnt2, cnt2
+  cpi end + 1 * range + 2 * step, cnt2, cnt2
+  cpi end + 1 * range + 4 * step, cnt2, cnt2
+  cpi end + 1 * range + 5 * step, cnt2, cnt2
+
+  inc cnt2, 6 * step
+  jlt clear2, cnt2, range - len - 4 * step
+
+main2:
+  set cnt2, 0
+copy2:
+  cpy dst2 + 0, src2 + 0, cnt2
+  cpy dst2 + 1, src2 + 1, cnt2
+  cpy dst2 + 2, src2 + 2, cnt2
+  cpy dst2 + 3, src2 + 3, cnt2
+
+  inc cnt2, 4
+  jlt copy2, cnt2, len2
+
+  # jump to copy
+  jmp dst2
+end2:
+
+cnt2:
+  dat
+
+################################################################################
+
+src3:
+  set cnt3, -step
+clear3:
+  cpi src - 0 * range - 0 * step, cnt3, cnt3
+  cpi src - 0 * range - 3 * step, cnt3, cnt3
+
+  cpi src - 1 * range - 0 * step, cnt3, cnt3
+  cpi src - 1 * range - 3 * step, cnt3, cnt3
+
+  cpi src - 2 * range - 0 * step, cnt3, cnt3
+  cpi src - 2 * range - 3 * step, cnt3, cnt3
+
+  dec cnt3, 6 * step
+  jgt clear3, cnt3, -range + len + 2 * step
+
+main3:
+  set cnt3, 0
+copy3:
+  cpy dst3 + 0, src3 + 0, cnt3
+  cpy dst3 + 1, src3 + 1, cnt3
+  cpy dst3 + 2, src3 + 2, cnt3
+  cpy dst3 + 3, src3 + 3, cnt3
+
+  inc cnt3, 4
+  jlt copy3, cnt3, len3
+
+  # jump to copy
+  jmp dst3
+end3:
+
+cnt3:
+  dat
+
+################################################################################
+
+src4:
+  set cnt4, -step
+clear4:
+  cpi src - 0 * range - 1 * step, cnt4, cnt4
+  cpi src - 0 * range - 2 * step, cnt4, cnt4
+  cpi src - 0 * range - 4 * step, cnt4, cnt4
+  cpi src - 0 * range - 5 * step, cnt4, cnt4
+
+  cpi src - 1 * range - 1 * step, cnt4, cnt4
+  cpi src - 1 * range - 2 * step, cnt4, cnt4
+  cpi src - 1 * range - 4 * step, cnt4, cnt4
+  cpi src - 1 * range - 5 * step, cnt4, cnt4
+
+  dec cnt4, 6 * step
+  jgt clear4, cnt4, -range + len + 4 * step
+
+main4:
+  set cnt4, 0
+copy4:
+  cpy dst4 + 0, src4 + 0, cnt4
+  cpy dst4 + 1, src4 + 1, cnt4
+  cpy dst4 + 2, src4 + 2, cnt4
+  cpy dst4 + 3, src4 + 3, cnt4
+
+  inc cnt4, 4
+  jlt copy4, cnt4, len4
+
+  # jump to copy
+  jmp dst4
+end4:
+
+cnt4:
+  dat
+
+end:
+
+################################################################################

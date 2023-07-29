@@ -1,0 +1,107 @@
+################################################################################
+
+width = 256
+range = 5 * width
+step = 8
+
+len = end - src
+
+offB = 15
+distB = 2 * range
+dstB = srcB - distB
+lenB = endB - srcB
+
+offF = 16
+distF = 3 * range
+dstF = srcF + distF
+lenF = endF - srcF
+
+################################################################################
+
+src:
+  frk srcF
+
+################################################################################
+
+srcB:
+  set cntB, -step - offB
+clearB:
+  cpi src - 0 * range - 1 * step, cntB, cntB
+  cpi src - 0 * range - 2 * step, cntB, cntB
+  cpi src - 0 * range - 4 * step, cntB, cntB
+  cpi src - 0 * range - 5 * step, cntB, cntB
+  cpi src - 0 * range - 7 * step, cntB, cntB
+  cpi src - 0 * range - 8 * step, cntB, cntB
+
+  cpi src - 1 * range - 1 * step, cntB, cntB
+  cpi src - 1 * range - 2 * step, cntB, cntB
+  cpi src - 1 * range - 4 * step, cntB, cntB
+  cpi src - 1 * range - 5 * step, cntB, cntB
+  cpi src - 1 * range - 7 * step, cntB, cntB
+  cpi src - 1 * range - 8 * step, cntB, cntB
+
+  dec cntB, 9 * step
+  jgt clearB, cntB, -range + len + 8 * step
+
+mainB:
+  set cntB, 0
+copyB:
+  cpy dstB + 0, srcB + 0, cntB
+  cpy dstB + 1, srcB + 1, cntB
+  cpy dstB + 2, srcB + 2, cntB
+  cpy dstB + 3, srcB + 3, cntB
+
+  inc cntB, 4
+  jlt copyB, cntB, lenB
+
+  # jump to copy
+  jmp dstB
+endB:
+
+cntB:
+  dat
+
+################################################################################
+
+srcF:
+  set cntF, step + offF
+clearF:
+  cpi end + 0 * range + 0 * step, cntF, cntF
+  cpi end + 0 * range + 3 * step, cntF, cntF
+  cpi end + 0 * range + 6 * step, cntF, cntF
+  cpi end + 0 * range + 9 * step, cntF, cntF
+
+  cpi end + 1 * range + 0 * step, cntF, cntF
+  cpi end + 1 * range + 3 * step, cntF, cntF
+  cpi end + 1 * range + 6 * step, cntF, cntF
+  cpi end + 1 * range + 9 * step, cntF, cntF
+
+  cpi end + 2 * range + 0 * step, cntF, cntF
+  cpi end + 2 * range + 3 * step, cntF, cntF
+  cpi end + 2 * range + 6 * step, cntF, cntF
+  cpi end + 2 * range + 9 * step, cntF, cntF
+
+  inc cntF, 12 * step
+  jlt clearF, cntF, range - len - 8 * step
+
+mainF:
+  set cntF, 0
+copyF:
+  cpy dstF + 0, srcF + 0, cntF
+  cpy dstF + 1, srcF + 1, cntF
+  cpy dstF + 2, srcF + 2, cntF
+  cpy dstF + 3, srcF + 3, cntF
+
+  inc cntF, 4
+  jlt copyF, cntF, lenF
+
+  # jump to copy
+  jmp dstF
+endF:
+
+cntF:
+  dat
+
+end:
+
+################################################################################

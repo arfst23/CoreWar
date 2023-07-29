@@ -1,0 +1,33 @@
+################################################################################
+
+range = 15 * 256
+step = 12
+
+################################################################################
+
+start:
+  set cnt, step
+loop:
+  # clear forward
+  cpi end, cnt, cnt
+  cpi end + step, cnt, cnt
+  cpi end + 2 * step, cnt, cnt
+  cpi end + 3 * step, cnt, cnt
+
+  # clear backward
+  cpi start - range - 2 * step, cnt, cnt
+  cpi start - range - 3 * step, cnt, cnt
+  cpi start - range - 4 * step, cnt, cnt
+  cpi start - range - 5 * step, cnt, cnt
+
+  inc cnt, 4 * step
+  jlt loop, cnt, range
+
+  # restart
+  jmp start
+end:
+
+cnt:
+  dat
+  
+################################################################################

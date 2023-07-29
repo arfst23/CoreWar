@@ -1,0 +1,44 @@
+################################################################################
+
+width = 256
+dist = 13 * width + 73
+dst = src - dist
+len = end - src
+step = 51
+
+################################################################################
+
+# copy forward
+
+src:
+  set cnt, 0
+  set dst - 1, 0
+copy:
+  cpy dst, src, cnt
+  cpy dst + 1, src + 1, cnt
+  inc cnt, 2
+  jlt copy, cnt, len
+
+  # fork to decond part
+  frk clear
+
+  # jump to copy
+  jmp dst
+
+################################################################################
+
+# clear forward
+
+clear:
+  set cnt, step
+loop:
+  cpi end, cnt, cnt
+  cpi end + step, cnt, cnt
+  inc cnt, 2 * step
+  jlt loop, cnt, len * step
+
+cnt:
+  dat
+end:
+
+################################################################################

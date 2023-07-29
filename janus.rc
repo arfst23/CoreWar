@@ -1,0 +1,76 @@
+################################################################################
+
+width = 256
+frq = 8
+reg = 18 * width
+off = 17 * width
+
+len1 = end1 - src1
+dst1 = src1 - off
+
+len2 = end2 - src2
+dst2 = src2 + off
+
+################################################################################
+
+  # do both directions in parallel
+  # both jobs bypass each other
+  frk src2
+
+################################################################################
+
+# clear backward
+
+src1:
+  set cnt1, -2 * frq
+clr1:
+  cpi src1, hlt1, cnt1
+  cpi src1 - frq, hlt1 - frq, cnt1
+  dec cnt1, 2 * frq
+  jge clr1, cnt1, -reg
+
+# copy backward
+
+  set cnt1, 0
+cpy1:
+  cpy dst1, src1, cnt1
+  inc cnt1
+  jle cpy1, cnt1, len1
+
+  # jump to copy
+  jmp dst1
+end1:
+
+hlt1:
+cnt1:
+  dat
+
+################################################################################
+
+# clear forward
+
+src2:
+  set cnt2, 2 * frq
+clr2:
+  cpi end2 - 1, hlt2, cnt2
+  cpi end2 - 1 + frq, hlt2 + frq, cnt2
+  inc cnt2, 2 * frq
+  jle clr2, cnt2, reg
+
+# copy forward
+
+  set cnt2, 0
+cpy2:
+  cpy dst2, src2, cnt2
+  inc cnt2
+  jle cpy2, cnt2, len2
+
+  # jump to copy
+  jmp dst2
+end2:
+
+hlt2:
+cnt2:
+  dat
+
+################################################################################

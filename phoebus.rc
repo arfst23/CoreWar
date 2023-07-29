@@ -1,0 +1,62 @@
+################################################################################
+
+width = 256
+dist = 18 * width
+src = copy - dist
+dst = copy + dist
+step = 12
+len = end - main
+off = 1
+
+################################################################################
+
+# clear backward and forward
+
+main:
+  set cnt, 0
+clear:
+  # backward
+  cpi main - dist + 0 * step, cnt, cnt
+  cpi main - dist + 1 * step, cnt, cnt
+  cpi main - dist + 2 * step, cnt, cnt
+  cpi main - dist + 3 * step, cnt, cnt
+
+  # forward
+  cpi end + off + 1 * step, cnt, cnt
+  cpi end + off + 2 * step, cnt, cnt
+  cpi end + off + 3 * step, cnt, cnt
+  cpi end + off + 4 * step, cnt, cnt
+
+  inc cnt, 4 * step
+  jlt clear, cnt, dist
+
+################################################################################
+
+# copy copy loop
+
+  cpy main + dist + 0, copy + 0, copy
+  cpy main + dist + 1, copy + 1, copy
+  cpy main + dist + 2, copy + 2, copy
+  cpy main + dist + 3, copy + 3, copy
+  cpy main + dist + 4, copy + 4, copy
+  set main + dist + 5, 0
+
+# jump to copy loop
+  jmp main + dist
+
+################################################################################
+
+# copy forward
+
+copy:
+  cpy dst + 0, src + 0, cnt
+  cpy dst + 1, src + 1, cnt
+  inc cnt, 2
+  jlt copy, cnt, len
+  jmp dst
+end:
+
+cnt:
+  dat
+
+################################################################################

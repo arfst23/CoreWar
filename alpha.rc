@@ -1,0 +1,26 @@
+################################################################################
+
+width = 256
+distance = 17 * width + 23
+dst = src + distance
+length = end - src
+
+################################################################################
+
+src:
+  set counter, 0
+loop:
+  cpy dst, src, counter
+  cpy dst + 1, src + 1, counter
+  cpy dst + 2, src + 2, counter
+  inc counter, 3
+  jle loop, counter, length
+
+  # jump to copy
+  jmp dst
+end:
+
+counter:
+  dat
+
+################################################################################

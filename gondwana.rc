@@ -1,0 +1,55 @@
+################################################################################
+
+width = 256
+off = 1
+dist = width * 19 + off
+step = 24
+range = 24 * 202
+
+dst = src + dist
+len = end - src
+
+################################################################################
+
+# clear forward
+
+src:
+  set idx, step
+clear:
+  # optimized loop unrolling
+  cpi end + 0 * step, idx, idx
+  cpi end + 1 * step, idx, idx
+  cpi end + 2 * step, idx, idx
+  cpi end + 3 * step, idx, idx
+  cpi end + 4 * step, idx, idx
+  cpi end + 5 * step, idx, idx
+  cpi end + 6 * step, idx, idx
+  cpi end + 7 * step, idx, idx
+  cpi end + 8 * step, idx, idx
+  cpi end + 9 * step, idx, idx
+  cpi end + 10 * step, idx, idx
+  cpi end + 11 * step, idx, idx
+  inc idx, 12 * step
+  jlt clear, idx, range
+
+################################################################################
+
+# copy forward
+
+  set idx, 0
+copy:
+  # optimized loop unrolling
+  cpy dst + 0, src + 0, idx
+  cpy dst + 1, src + 1, idx
+  cpy dst + 2, src + 2, idx
+  cpy dst + 3, src + 3, idx
+  inc idx, 4
+  jlt copy, idx, len
+
+  jmp dst
+end:
+
+idx:
+  dat
+
+################################################################################

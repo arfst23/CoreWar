@@ -1,0 +1,61 @@
+################################################################################
+
+dist = 10 * 256 + 23
+step = 49
+
+delay = 24
+
+dst = src - dist
+len = end - src
+
+################################################################################
+
+src:
+  # terminate if critical region locked
+  jne end, guard, 23
+
+  # lock critical region
+  set guard, 42
+
+redo:
+  set copy, 0
+
+# clear backward and create copy forward
+
+  set clear, -step
+loop:
+  # create copy
+  cpy dst, src, copy
+  inc copy
+
+# clear
+  cpi src, end, clear
+  cpi src - step, end, clear
+  cpi src - 2 * step, end, clear
+  dec clear, 3 * step
+  jlt loop, copy, len
+
+  # restart unless copy is running
+  jeq redo, guard - dist, 42
+
+  # mark this copy as successful
+  set guard, 23
+
+  # restart if processes available
+  frk src
+
+  # unlock critical region
+  set guard - dist, 23
+
+  # jump to copy
+  jmp dst
+end:
+
+guard:
+  dat 23
+copy:
+  dat
+clear:
+  dat
+
+################################################################################

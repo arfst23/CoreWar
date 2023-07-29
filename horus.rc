@@ -1,0 +1,74 @@
+###############################################################################
+
+range = 19 * 256
+dist = 17 * 256 - 2
+dst = src + dist
+len = end - src
+
+step = 20
+size = 5
+
+################################################################################
+
+# clear backward
+
+main:
+  set index, 0
+loop:
+  cpi main - size, main, index
+  cpi main - 2 * size, main, index
+  cpi main - 3 * size, main, index
+  cpy main - 13 * 256 - 7, main - 1, main - 1
+  dec index, 3 * size
+  jgt loop, index, -range
+
+################################################################################
+
+# increment initial offset
+
+  inc init, 5
+  jlt skip, init, step
+  set init, 0
+skip:
+  # fork to second part
+  frk src
+
+  # restart
+  jmp main
+
+index:
+  dat
+
+################################################################################
+
+# clear forward
+
+src:
+  cpy count, init, src
+clear:
+  cpi base, init, count
+  cpi base + step, init, count
+  cpi base + 2 * step, init, count
+  inc count, 3 * step
+  jlt clear, count, range
+
+# copy forward
+
+  set count, 0
+copy:
+  cpy dst, src, count
+  cpy dst + 1, src + 1, count
+  inc count, 2
+  jlt copy, count, len
+
+  jmp dst
+
+init:
+  dat
+end:
+
+count:
+  dat
+base:
+
+################################################################################

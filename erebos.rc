@@ -1,0 +1,129 @@
+################################################################################
+
+width = 256
+dist = 4863 # 19 * width
+step = 10
+cpys = 9
+dest = src - dist
+length = end - src
+cookie = 23
+len = eof - start
+
+################################################################################
+
+# do two things at once
+
+  frk begin
+  jmp fwd
+
+################################################################################
+
+src:
+catch:
+  jmp jump
+
+# write jumps backward to catch opponent
+
+begin:
+  set offset, -step
+loop:
+  cpi catch, jump, offset
+  dec offset, step
+  jgt loop, offset, -dist
+
+  # decrement copy counter
+  dec count
+  # stop after max copies
+  jlt halt, count, 0
+
+# copy backward
+
+move:
+  set index, 0
+copy:
+  cpy dest, src, index
+  inc index
+  jlt copy, index, length
+
+  # jump to copy
+  jmp begin - dist
+
+count:
+  dat cpys
+
+jump:
+  jmp jump + step
+end:
+
+################################################################################
+
+halt:
+index:
+offset:
+  dat
+
+flag:
+  dat
+
+range:
+  dat
+
+  dat
+  dat
+  dat
+  dat
+  dat
+  dat
+
+jail:
+  frk jail
+  # flag if caught
+  set flag, cookie
+  jmp jail
+
+  dat
+  dat
+  dat
+  
+################################################################################
+
+# write jumps forward to catch opponent
+
+fwd:
+  set range, 0
+clear:
+  cpi eof, range, range
+  inc range, step
+  jlt clear, range, dist
+
+  # loop until opponent caught
+  jne fwd, flag, cookie
+
+  jmp mid
+
+################################################################################
+
+# clear forward
+
+start:
+  set range, 0
+erase:
+  cpi eof, range, range
+  inc range, step
+  jlt erase, range, dist
+
+# copy forward
+
+mid:
+  set range, 0
+dup:
+  cpy start + dist, start, range
+  inc range
+  jlt dup, range, len
+
+  # jump to copy
+  jmp start + dist
+
+eof:
+
+################################################################################

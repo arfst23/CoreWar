@@ -1,0 +1,17 @@
+# create a copy and jump to it
+
+distance = 256
+dst = src + distance
+length = end - src
+
+src:
+  set counter, 0
+loop:
+  cpy dst, src, counter
+  inc counter
+  jle loop, counter, length
+  jmp dst
+end:
+
+counter:
+  dat

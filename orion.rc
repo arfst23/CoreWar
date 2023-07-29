@@ -1,0 +1,101 @@
+################################################################################
+
+dist = 256 * 17
+range = dist - 256
+step = 12
+secret = 23
+
+dst1 = src1 - dist
+len1 = end1 - src1
+off1 = 20309 - 16981
+
+dst2 = src2 + dist
+len2 = end2 - src2
+off2 = 16981 + src2 - src1 - 13668
+
+################################################################################
+
+# clear backward
+
+src1:
+  set count1, -step - 2 # 16981
+
+  # terminate if original copy detected
+  jeq count1, magic - off1, secret
+
+clean1:
+  cpi src1, count1, count1
+  dec count1, step
+  jgt clean1, count1, -range
+
+# copy backward
+
+  set count1, 0
+copy1:
+  cpy dst1, src1, count1
+  inc count1
+  jlt copy1, count1, len1
+
+fork1:
+  # fork to the copy
+  frk dst1
+end1:
+
+  # patch the fork command in the copy with a jump command
+  cpy fork1 - dist, jump1, jump1
+
+  # jump to second part
+  jmp src2
+
+count1:
+  dat
+
+jump1:
+  jmp dst1 + jump1 - fork1
+
+################################################################################
+
+magic:
+  dat secret
+
+################################################################################
+
+# clear forward
+
+src2:
+  set count2, step + 2
+
+  # terminate if original copy detected
+  jeq count2, magic + off2, secret
+
+clean2:
+  cpi end2, count2, count2
+  inc count2, step
+  jlt clean2, count2, range
+
+# copy forward
+
+  set count2, 0
+copy2:
+  cpy dst2, src2, count2
+  inc count2
+  jlt copy2, count2, len2
+
+fork2:
+  # fork to the copy
+  frk dst2
+end2:
+
+  # patch the fork command in the copy with a jump command
+  cpy fork2 + dist, jump2, jump2
+
+  # jump to first part
+  jmp src1
+
+count2:
+  dat
+
+jump2:
+  jmp dst2 + jump2 - fork2
+
+################################################################################

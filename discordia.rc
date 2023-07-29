@@ -1,0 +1,48 @@
+################################################################################
+
+width = 256
+off = 13 * width + 113
+dst = src + off
+len = end - src
+
+frq = 8
+pfg = flg - off
+
+################################################################################
+
+# copy forward
+
+src:
+  set cnt, 0
+copy:
+  cpy dst, src, cnt
+  inc cnt
+  jle copy, cnt, len
+
+  # fork to copy
+  frk dst
+
+  # set flag in previous copy
+  set pfg, 23
+
+################################################################################
+
+# clear forward
+
+  set cnt, frq
+clear:
+  cpi end, hlt, cnt
+  inc cnt, frq
+  jle clear, cnt, (len + 1) * frq
+  
+  # restart if flag was not set
+  jne src, flg, 23
+end:
+  
+hlt:
+cnt:
+  dat
+flg:
+  dat
+
+################################################################################

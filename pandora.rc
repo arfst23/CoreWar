@@ -1,0 +1,75 @@
+################################################################################
+
+width = 256
+range = 19 * width
+step = 24
+dist = 6 * width + step
+dst = src - dist
+len = end - src
+trg = src + range + 5 * step + step / 2
+
+################################################################################
+
+  # create a copy with offset
+  frk main
+
+# clear backward
+
+src:
+  set idx, -step
+clear:
+  cpi src - 0 * step, idx, idx
+  cpi src - 3 * step, idx, idx
+  cpi src - 6 * step, idx, idx
+  cpi src - 9 * step, idx, idx
+  cpi src - 12 * step, idx, idx
+  cpi src - 15 * step, idx, idx
+  cpi src - 18 * step, idx, idx
+  cpi src - 21 * step, idx, idx
+
+  dec idx, 24 * step
+  jgt clear, idx, -range
+
+################################################################################
+
+# copy backward
+
+  set idx, 0
+copy:
+  cpy dst + 0, src + 0, idx
+  cpy dst + 1, src + 1, idx
+  cpy dst + 2, src + 2, idx
+  cpy dst + 3, src + 3, idx
+
+  inc idx, 4
+  jlt copy, idx, len
+
+  # jump to copy
+  jmp dst
+end:
+
+idx:
+  dat
+
+################################################################################
+
+# copy forward
+
+main:
+  set cnt, 0
+loop:
+  cpy trg + 0, src + 0, cnt
+  cpy trg + 1, src + 1, cnt
+  cpy trg + 2, src + 2, cnt
+  cpy trg + 3, src + 3, cnt
+
+  inc cnt, 4
+  jlt loop, cnt, len
+
+  # jump to copy
+  jmp trg
+
+cnt:
+  dat
+
+################################################################################

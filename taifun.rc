@@ -1,0 +1,55 @@
+################################################################################
+
+width = 256
+dist = 13 * 256 + 37
+dst = src + dist
+len = end - src
+step = 48
+range = 32 * step
+
+################################################################################
+
+# clear backward
+
+main:
+  set idx, -step
+loop:
+  cpi main, idx, idx
+  cpi main - step, idx, idx
+  cpi main - 2 * step, idx, idx
+
+  dec idx, 3 * step
+  jgt loop, idx, -range
+
+################################################################################
+
+# copy forward
+
+src:
+  set idx, 0
+copy:
+  cpy dst, src, idx
+  cpy dst + 1, src + 1, idx
+  cpy dst + 2, src + 2, idx
+
+  inc idx, 3
+  jlt copy, idx, len
+
+jump:
+  # fork to copy
+  frk dst
+end:
+
+  # patch fork in copy with jump
+  cpy jump + dist, patch, patch
+
+  # restart
+  jmp main
+
+patch:
+  jmp dst + patch - jump
+
+idx:
+  dat
+
+################################################################################

@@ -1,0 +1,125 @@
+################################################################################
+
+width = 256
+dist = 16 * width
+dst = src + dist
+length = end - src
+ramp = main + width
+back = 19 * width
+
+off = 6
+step = 4 * off
+
+################################################################################
+
+# have four agents equally distributed
+
+main:
+
+# clear forward
+
+  set count, -19
+clr1:
+  cpi main, count, count
+  dec count, step
+  jgt clr1, count, -back
+
+# copy agent forward
+
+  set count, 0
+cpy2:
+  cpy ramp, src, count
+  inc count
+  jlt cpy2, count, length
+
+  # fork to copy
+  frk ramp
+
+# clear backward
+
+  set count, -19 - 2 * off
+clr3:
+  cpi main, count, count
+  dec count, step
+  jgt clr3, count, -back
+
+# copy agent forward
+
+  set count, 0
+cpy4:
+  cpy ramp + 2 * off, src, count
+  inc count
+  jlt cpy4, count, length
+
+  # fork to copy
+  frk ramp + 2 * off
+
+# clear backward
+
+  set count, -19 - off
+clr5:
+  cpi main, count, count
+  dec count, step
+  jgt clr5, count, -back
+
+# copy agent forward
+
+  set count, 0
+cpy6:
+  cpy ramp + off, src, count
+  inc count
+  jlt cpy6, count, length
+
+  # fork to copy
+  frk ramp + off
+
+# clear backward
+
+  set count, -19 - 3 * off
+clr7:
+  cpi main, count, count
+  dec count, step
+  jgt clr7, count, -back
+
+# copy agent forward
+
+  set count, 0
+cpy8:
+  cpy ramp + 3 * off, src, count
+  inc count
+  jlt cpy8, count, length
+
+  # jump to copy
+  jmp ramp + 3 * off
+
+################################################################################
+
+# clear forward
+
+src:
+  set count, step
+clear:
+  cpi end, count, count
+  cpi end + step, count, count
+  cpi end + 2 * step, count, count
+  cpi end + 3 * step, count, count
+  cpi end + 4 * step, count, count
+  inc count, 5 * step
+  jlt clear, count, dist
+
+# copy forward
+
+  set count, 0
+copy:
+  cpy dst, src, count
+  cpy dst + 1, src + 1, count
+  cpy dst + 2, src + 2, count
+  inc count, 3
+  jlt copy, count, length
+  jmp dst
+end:
+
+count:
+  dat
+
+################################################################################

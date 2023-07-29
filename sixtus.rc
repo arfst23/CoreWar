@@ -1,0 +1,146 @@
+################################################################################
+
+width = 256
+range = 5 * width
+dist = 15 * width
+
+single = 18
+double = 2 * single
+half = single / 2
+
+bdst = bwd - dist
+blen = bend - bwd
+boff = bclear - bpatch
+
+fdst = fwd + dist
+flen = fend - fwd
+
+delay = 30
+
+################################################################################
+
+# have two forward agents and two backward agents
+# that bypass each other
+
+main:
+  frk bstart
+
+################################################################################
+
+wait:
+  dec count
+  jgt wait, count, 0
+
+################################################################################
+
+  # fork to forward agent
+  frk fwd
+
+  # patch offset in backward agent
+  cpy bclear, bpatch, bpatch
+  cpy bclear + 1, bpatch + 1, bpatch
+  cpy bclear + 2, bpatch + 2, bpatch
+  cpy bclear + 3, bpatch + 3, bpatch
+  cpy bclear + 4, bpatch + 4, bpatch
+  cpy bclear + 5, bpatch + 5, bpatch
+
+  # jump to backward agent
+  jmp bwd
+
+count:
+  dat delay
+
+bpatch:
+  cpi bwd - single - boff, bcount - boff, bcount - boff
+  cpi bwd - double - single - boff, bcount - boff, bcount - boff
+
+  cpi bwd - range - single - boff, bcount - boff, bcount - boff
+  cpi bwd - range - double - single - boff, bcount - boff, bcount - boff
+
+  cpi bwd - 2 * range - single - boff, bcount - boff, bcount - boff
+  cpi bwd - 2 * range - double - single - boff, bcount - boff, bcount - boff
+
+################################################################################
+
+# clear backward
+
+bwd:
+  set bcount, -double
+bclear:
+  cpi bwd, bcount, bcount
+  cpi bwd - double, bcount, bcount
+
+  cpi bwd - range, bcount, bcount
+  cpi bwd - range - double, bcount, bcount
+
+  cpi bwd - 2 * range, bcount, bcount
+  cpi bwd - 2 * range - double, bcount, bcount
+
+  dec bcount, 2 * double
+  jgt bclear, bcount, -range + 3 * double
+
+# copy backward
+
+bstart:
+  set bcount, 0
+bcopy:
+  cpy bdst, bwd, bcount
+  cpy bdst + 1, bwd + 1, bcount
+  cpy bdst + 2, bwd + 2, bcount
+  inc bcount, 3
+  jlt bcopy, bcount, blen
+
+  # jump to copy
+  jmp bdst
+bend:
+
+bcount:
+  dat
+
+################################################################################
+
+# clear forward
+
+fwd:
+  set fcount, double
+fclear:
+  cpi fend + half + single - 1, fcount, fcount
+  cpi fend + half + double + single - 1, fcount, fcount
+  
+  cpi fend + half + range + single - 1, fcount, fcount
+  cpi fend + half + range + double + single - 1, fcount, fcount
+
+  cpi fend + half + 2 * range + single - 1, fcount, fcount
+  cpi fend + half + 2 * range + double + single - 1, fcount, fcount
+
+  cpi fend + half + double - 1, fcount, fcount
+  cpi fend + half + 2 * double - 1, fcount, fcount
+  
+  cpi fend + half + range + double - 1, fcount, fcount
+  cpi fend + half + range + 2 * double - 1, fcount, fcount
+
+  cpi fend + half + 2 * range + double - 1, fcount, fcount
+  cpi fend + half + 2 * range + 2 * double - 1, fcount, fcount
+
+  inc fcount, 2 * double
+  jlt fclear, fcount, range - 3 * double
+
+# copy forward
+
+fstart:
+  set fcount, 0
+fcopy:
+  cpy fdst, fwd, fcount
+  cpy fdst + 1, fwd + 1, fcount
+  cpy fdst + 2, fwd + 2, fcount
+  inc fcount, 3
+  jlt fcopy, fcount, flen
+
+  # jump to copy
+  jmp fdst
+fend:
+
+fcount:
+  dat
+
+################################################################################

@@ -1,0 +1,64 @@
+################################################################################
+
+width = 256
+dist = width * 6
+dst = src - dist
+len = end - src
+step = 27
+magic = 23
+
+################################################################################
+
+src:
+  # do two things at once
+  frk clr
+
+################################################################################
+
+# copy backward
+
+  set count, 0
+loop:
+  cpy dst, src, count
+  cpy dst + 1, src + 1, count
+
+  inc count, 2
+  jlt loop, count, len
+
+  # flag the previous copy
+  set flag + dist, magic
+
+  # jump to the new copy
+  jmp dst
+
+count:
+  dat
+
+################################################################################
+
+# clear backward
+
+clr:
+  set index, -2 * dist
+clear:
+  cpi src, index, index
+  cpi src - step, index, index
+  cpi src - 2 * step, index, index
+  cpi src - 3 * step, index, index
+
+  dec index, 4 * step
+  jgt clear, index, -3 * dist
+
+  # restart if watchdog timed out
+  jne src, flag, magic
+  # otherwise terminate this copy
+
+index:
+  dat
+
+flag:
+  dat
+
+end:
+
+################################################################################

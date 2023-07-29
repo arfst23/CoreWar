@@ -1,0 +1,2 @@
+base:
+  cpy base + 1, base, base

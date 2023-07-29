@@ -1,0 +1,67 @@
+################################################################################
+
+width = 256
+off = 17 * width
+dst = src + off
+len = end - src
+
+frq = 6
+max = 19 * width
+
+################################################################################
+
+# have four copies running equally distributed
+
+src:
+  # increment copy counter
+  inc flg
+  jlt run, flg, 3
+  set flg, 0
+
+# copy forward
+
+run:
+  set cnt, 0
+cpy:
+  cpy dst, src, cnt
+  inc cnt
+  jle cpy, cnt, len
+
+  # jump to copy unless counter is one
+  jne dst, flg, 1
+  # fork to copy if counter is one
+  frk dst
+
+################################################################################
+
+# clear forward and backward
+
+clr:
+  set fwd, frq
+  set bwd, -frq
+lop:
+  cpi end - 2, hlt, fwd
+  cpi end - 2 + frq, hlt, fwd
+  inc fwd, 2 * frq
+
+  cpi src, hlt, bwd
+  cpi src - frq, hlt, bwd
+  dec bwd, 2 * frq
+
+  jle lop, fwd, max
+
+  # restart
+  jmp clr
+
+flg:
+  dat 
+end:
+
+hlt:
+cnt:
+fwd:
+  dat
+bwd:
+  dat
+
+################################################################################

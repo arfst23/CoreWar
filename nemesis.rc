@@ -1,0 +1,126 @@
+################################################################################
+
+width = 256
+step = 7
+step0 = 10
+dist = 18 * width
+len1 = end1 - start1
+len2 = end2 - start2
+magic = 23
+
+################################################################################
+
+main:
+  # create forward copy unless active
+  jeq skip1, flag1, magic
+
+# copy forward
+
+  set count, 0
+copy1:
+  cpy main - dist, start1, count
+  inc count
+  jlt copy1, count, len1
+
+  # fork to copy
+  frk main - dist
+
+skip1:
+  # reset watchdog
+  set flag1, 0
+
+  # create forward copy unless active
+  jeq skip2, flag2, magic
+
+# copy backward
+
+  set count, 0
+copy2:
+  cpy start2 + dist, start2, count
+  inc count
+  jlt copy2, count, len2
+
+  # fork to copy
+  frk start2 + dist
+
+skip2:
+  # reset watchdog
+  set flag2, 0
+
+################################################################################
+
+# clear forward and backward
+
+  set count, 0
+clear:
+  cpi main - dist + width, count, count
+  cpi main - dist + width + step0, count, count
+
+  cpi end2 + width, count, count
+  cpi end2 + width + step0, count, count
+
+  inc count, 2 * step0
+  jlt clear, count, dist - 2 * width
+
+  # restart
+  jmp main
+end:
+
+count:
+  dat
+
+flag1:
+  dat
+
+flag2:
+  dat
+
+################################################################################
+
+# clear backward
+
+start1:
+  set count1, -step
+clear1:
+  cpi start1, count1, count1
+  cpi start1 - step, count1, count1
+  cpi start1 - 2 * step, count1, count1
+
+  dec count1, 3 * step
+  jgt clear1, count1, -dist
+
+  # reset watchdog
+  set start1 + dist - main + flag1, magic
+
+  # restart
+  jmp start1
+end1:
+
+count1:
+  dat
+
+################################################################################
+
+# clear forward
+
+start2:
+  set count2, step
+clear2:
+  cpi end2, count2, count2
+  cpi end2 + step, count2, count2
+  cpi end2 + 2 * step, count2, count2
+
+  inc count2, 3 * step
+  jlt clear2, count2, dist
+
+  # reset watchdog
+  set start2 - dist - start2 + flag2, magic
+
+  # restart
+  jmp start2
+end2:
+
+count2:
+  dat
+
+################################################################################

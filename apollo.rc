@@ -1,0 +1,58 @@
+################################################################################
+
+width = 256
+range = 16 * width
+step = 12
+
+dist = 18 * width
+len  = end - begin
+
+################################################################################
+
+  jmp main
+
+begin:
+  # fork loop to catch the opponent
+fork:
+  frk fork
+  jmp fork
+
+jump:
+  jmp jump + step
+
+################################################################################
+
+# write jumps to catch the opponent in the fork loop
+
+main:
+  # terminate the fork loop after one round
+  cpy fork - 2 * width, index, main
+
+  # write jumps to catch yhe opponent
+  set index, 0
+loop:
+  cpi fork - step, jump, index
+  cpi fork - 2 * step, jump, index
+  dec index, 2 * step
+  jgt loop, index, -range
+
+################################################################################
+
+# copy forward
+
+  set index, 0
+copy:
+  cpy begin - dist, begin, index
+  cpy begin - dist + 1, begin + 1, index
+  inc index, 2
+  jlt copy, index, len
+
+  jmp main - dist
+end:
+
+################################################################################
+
+index:
+  dat
+
+################################################################################

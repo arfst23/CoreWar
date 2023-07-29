@@ -1,0 +1,99 @@
+################################################################################
+
+width = 256
+range = 15 * width
+step = 8
+
+len = end - src
+dst = src + range
+
+################################################################################
+
+main:
+  # start agent
+  frk src
+
+# clear backward to wait
+
+  set idx, -step
+clr1:
+  cpi main - 0 * step, idx, idx
+  cpi main - 1 * step, idx, idx
+  cpi main - 2 * step, idx, idx
+  cpi main - 3 * step, idx, idx
+
+  dec idx, 4 * step
+  jgt clr1, idx, -range
+  
+  # patch init value
+  cpy init, init2, main
+
+  # start agent
+  frk src
+
+# clear backward to wait
+
+  set idx, -step
+clr2:
+  cpi main - 0 * step, idx, idx
+  cpi main - 1 * step, idx, idx
+  cpi main - 2 * step, idx, idx
+  cpi main - 3 * step, idx, idx
+
+  dec idx, 4 * step
+  jgt clr2, idx, -range
+
+  # patch init value
+  cpy init, init3, main
+
+  # start agent
+  jmp src
+
+idx:
+  dat
+
+init2:
+  dat 2 * step
+
+init3:
+  dat 3 * step
+
+################################################################################
+
+# clear forward
+
+src:
+  cpy cnt, init, src
+clear:
+  cpi end + 0 * step, cnt, cnt
+  cpi end + 3 * step, cnt, cnt
+  cpi end + 6 * step, cnt, cnt
+  cpi end + 9 * step, cnt, cnt
+  cpi end + 12 * step, cnt, cnt
+  cpi end + 15 * step, cnt, cnt
+
+  inc cnt, 18 * step
+  jlt clear, cnt, range
+
+# copy forward
+
+  set cnt, 0
+copy:
+  cpy dst + 0, src + 0, cnt
+  cpy dst + 1, src + 1, cnt
+  cpy dst + 2, src + 2, cnt
+  cpy dst + 3, src + 3, cnt
+
+  inc cnt
+  jlt copy, cnt, len
+
+  # jump to copy
+  jmp dst
+init:
+  dat step
+end:
+
+cnt:
+  dat
+
+################################################################################

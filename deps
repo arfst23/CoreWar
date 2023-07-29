@@ -1,0 +1,19 @@
+ckaddress.o: ckaddress.cc address.h number.h redcode.h
+ckgraphix.o: ckgraphix.cc graphix.h
+ckloader.o: ckloader.cc loader.h memory.h address.h number.h redcode.h
+ckmachine.o: ckmachine.cc machine.h scheduler.h address.h number.h \
+ redcode.h processor.h memory.h loader.h
+ckmemory.o: ckmemory.cc memory.h address.h number.h redcode.h
+cknumber.o: cknumber.cc number.h redcode.h
+ckprocessor.o: ckprocessor.cc processor.h memory.h address.h number.h \
+ redcode.h scheduler.h
+ckscheduler.o: ckscheduler.cc scheduler.h address.h number.h redcode.h \
+ memory.h
+ckvisualizer.o: ckvisualizer.cc visualizer.h redcode.h address.h number.h
+graphix.o: graphix.cc graphix.h
+loader.o: loader.cc loader.h memory.h address.h number.h redcode.h
+mars.o: mars.cc machine.h scheduler.h address.h number.h redcode.h \
+ processor.h memory.h loader.h
+visualizer.o: visualizer.cc visualizer.h redcode.h graphix.h
+xmars.o: xmars.cc machine.h scheduler.h address.h number.h redcode.h \
+ processor.h memory.h loader.h visualizer.h

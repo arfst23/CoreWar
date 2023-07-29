@@ -1,0 +1,94 @@
+################################################################################
+
+width = 256
+range = 18 * width
+third = range / 3
+half = range / 2
+step = 36
+max = 9
+
+dist = range + width
+dst = src - dist
+len = end - src
+
+################################################################################
+
+  # master process
+  jmp main
+
+################################################################################
+
+# clear forward
+
+src:
+  cpy index, offset, src
+clear:
+  cpi src - range, index, index
+  cpi src - range + third, index, index
+  cpi src - range + 2 * third, index, index
+  inc index, step
+  jlt clear, index, third
+
+  dec counter
+  jle end, counter, 0
+
+# copy forward
+
+launch:
+  set index, 0
+copy:
+  cpy dst, src, index
+  cpy dst + 1, src + 1, index
+  inc index, 2
+  jlt copy, index, len
+
+  # jump to copy
+  jmp dst
+
+counter:
+  dat max
+
+offset:
+  dat
+end:
+
+index:
+  dat
+
+################################################################################
+
+main:
+  set offset, 0
+loop:
+  # start copy
+  frk launch
+
+# clear forward and backward
+
+  cpy idx, offset, loop
+wait:
+  # clear forward
+  cpi base + 5 + step, idx, idx
+  cpi base + 5 + half, idx, idx
+
+  # clear backward
+  cpi main + 3 - half, idx, idx
+  cpi main + 3 - range, idx, idx
+
+  inc idx, step / 2
+  jlt wait, idx, half - step
+
+  # decrement offset
+  dec offset, step / 3
+
+  # reset offset when too small
+  jgt loop, offset, -step
+
+  # restart
+  jmp main
+
+idx:
+  dat
+base:
+
+################################################################################

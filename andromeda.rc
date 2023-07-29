@@ -1,0 +1,74 @@
+################################################################################
+
+width = 256
+range = 19 * width
+step = 60
+off = 12
+
+################################################################################
+
+  frk mainF
+
+# clear backward
+
+baseB:
+
+mainB:
+  cpy idxB, offB, mainB
+
+clearB:  
+  cpi baseB - 1 * step, idxB, idxB
+  cpi baseB - 2 * step, idxB, idxB
+  cpi baseB - 3 * step, idxB, idxB
+  cpi baseB - 4 * step, idxB, idxB
+  cpi baseB - 5 * step, idxB, idxB
+  cpi baseB - 6 * step, idxB, idxB
+
+  dec idxB, 6 * step
+  jgt clearB, idxB, -range
+
+  dec offB, off
+  jgt mainB, offB, -step
+
+  set offB, 0
+  jmp mainB
+
+idxB:
+  dat
+
+offB:
+  dat
+
+################################################################################
+
+# clear forward
+
+mainF:
+  cpy idxF, offF, mainF
+
+clearF:
+  cpi baseF + 1 * step, idxF, idxF
+  cpi baseF + 2 * step, idxF, idxF
+  cpi baseF + 3 * step, idxF, idxF
+  cpi baseF + 4 * step, idxF, idxF
+  cpi baseF + 5 * step, idxF, idxF
+  cpi baseF + 6 * step, idxF, idxF
+
+  inc idxF, 6 * step
+  jlt clearF, idxF, range
+
+  inc offF, off
+  jlt mainF, offF, step
+
+  set offF, 0
+  jmp mainF
+
+idxF:
+  dat
+
+offF:
+  dat
+
+baseF:
+
+################################################################################
