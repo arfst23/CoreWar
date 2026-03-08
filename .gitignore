@@ -1,0 +1,13 @@
+*.o
+*.rx
+deps
+*.swp
+*~
+mars
+xmars
+cknumber
+ckaddress
+ckmemory
+ckscheduler
+ckloader
+ckprocessor
