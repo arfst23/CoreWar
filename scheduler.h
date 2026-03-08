@@ -15,6 +15,7 @@ template <typename Controler>
 class Scheduler
 {
   int users;
+  int running;
   int user;
   int nextpid;
   int procs[Redcode::users];
@@ -34,6 +35,9 @@ class Scheduler
 
   bool inc()
   {
+    if (controler.check())
+      return true;
+
     if (procs[user])
       if (++idx[user] >= procs[user])
 	idx[user] = 0;
@@ -44,9 +48,6 @@ class Scheduler
 	{
 	  user = 0;
 	  turns++;
-
-	  if (controler.check())
-	    return true;
 	}
       while (procs[user] == 0);
     return false;
@@ -63,6 +64,7 @@ public:
   void init(Address *address, int u)
   {
     users = u;
+    running = u;
     user = 0;
     nextpid = 0;
     turns = 0;
@@ -86,7 +88,7 @@ public:
 
   int uids()
   {
-    return users;
+    return running;
   }
 
   int uid() const
@@ -116,7 +118,7 @@ public:
       memmove(&proc[user][i], &proc[user][i + 1], (j - i) * sizeof(Proc));
 
     if (--procs[user] == 0)
-      users--;
+      running--;
     else
       idx[user]--;
 
@@ -138,7 +140,7 @@ public:
 
   bool next(const Address &adr)
   {
-    assert(users > 0);
+    assert(running > 0);
 
     int i = idx[user];
     proc[user][i].adr = adr();

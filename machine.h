@@ -9,8 +9,6 @@
 #include "memory.h"
 #include "address.h"
 
-#include <stdio.h>
-
 //******************************************************************************
 
 template <typename Controler>
