@@ -1,0 +1,3 @@
+src:
+  cpy dst, src, 0
+dst:

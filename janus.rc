@@ -3,7 +3,7 @@
 width = 256
 frq = 8
 reg = 18 * width
-off = 17 * width
+off = 16 * width
 
 len1 = end1 - src1
 dst1 = src1 - off
@@ -13,8 +13,8 @@ dst2 = src2 + off
 
 ################################################################################
 
-  # do both directions in parallel
-  # both jobs bypass each other
+# do both directions in parallel
+# both jobs bypass each other
   frk src2
 
 ################################################################################

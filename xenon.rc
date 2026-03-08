@@ -2,7 +2,7 @@
 
 width = 256
 range = 5 * width
-dist = 15 * width
+dist = 16 * width
 
 single = 12
 double = 2 * single

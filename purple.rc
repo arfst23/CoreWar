@@ -1,0 +1,34 @@
+width = 256
+range = width * 33
+
+dist = 5
+step = 16
+
+length = end - src
+dst = src + dist * width
+
+src:
+  set counter, width * (33 - dist)
+clear:
+  cpi end, halt, counter
+  inc counter, step
+  cpi end, halt, counter
+  inc counter, step
+  jle clear, counter, width * 33 - step;
+
+  set counter, 0
+copy:
+  cpy dst, src, counter
+  inc counter
+  cpy dst, src, counter
+  inc counter
+  jle copy, counter, length
+
+  jmp dst
+end:
+
+counter:
+  dat
+
+halt:
+  dat

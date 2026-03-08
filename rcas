@@ -4,8 +4,8 @@
 use strict;
 use Data::Dumper;
 
-my $length = 256 * 200;
-my $range = 256 * 20;
+my $length = 256 * 256;
+my $range = 256 * (32 + 1);
 
 ################################################################################
 
@@ -28,7 +28,7 @@ sub cmd($$$@)
   $dst = defined $dst ? $dst - $adr : 0;
   $src = defined $src ? $src - $adr : 0;
   $val = defined $val ? $val - $adr : 0
-    if ($cmd == 12 || $cmd == 13); # cpi cpy
+    if ($cmd == 13 || $cmd == 14); # cpi cpy
   printf "%03x: %02x %s%04x %s%04x %s%04x\n", $line, $cmd,
     sign $dst, value $dst, sign $src, value $src, sign $val, value $val;
 }
@@ -142,61 +142,65 @@ foreach my $code (@code)
   {
     cmd $line, $adr, 1, @arg, undef, 0;
   }
-  elsif ($cmd eq 'jmp' && @arg == 1)
+  elsif ($cmd eq 'fkj' && @arg == 1)
   {
     cmd $line, $adr, 2, @arg, undef, 0;
   }
-  elsif ($cmd eq 'jlt' && @arg == 3)
+  elsif ($cmd eq 'jmp' && @arg == 1)
   {
-    cmd $line, $adr, 3, @arg;
+    cmd $line, $adr, 3, @arg, undef, 0;
   }
-  elsif ($cmd eq 'jle' && @arg == 3)
+  elsif ($cmd eq 'jlt' && @arg == 3)
   {
     cmd $line, $adr, 4, @arg;
   }
-  elsif ($cmd eq 'jgt' && @arg == 3)
+  elsif ($cmd eq 'jle' && @arg == 3)
   {
     cmd $line, $adr, 5, @arg;
   }
-  elsif ($cmd eq 'jge' && @arg == 3)
+  elsif ($cmd eq 'jgt' && @arg == 3)
   {
     cmd $line, $adr, 6, @arg;
   }
-  elsif ($cmd eq 'jeq' && @arg == 3)
+  elsif ($cmd eq 'jge' && @arg == 3)
   {
     cmd $line, $adr, 7, @arg;
   }
-  elsif ($cmd eq 'jne' && @arg == 3)
+  elsif ($cmd eq 'jeq' && @arg == 3)
   {
     cmd $line, $adr, 8, @arg;
   }
+  elsif ($cmd eq 'jne' && @arg == 3)
+  {
+    cmd $line, $adr, 9, @arg;
+  }
   elsif ($cmd eq 'set' && @arg == 2)
-  {
-    cmd $line, $adr, 9, $arg[0], undef, $arg[1];
-  }
-  elsif ($cmd eq 'inc' && @arg == 1)
-  {
-    cmd $line, $adr, 10, @arg, undef, 1;
-  }
-  elsif ($cmd eq 'inc' && @arg == 2)
   {
     cmd $line, $adr, 10, $arg[0], undef, $arg[1];
   }
-  elsif ($cmd eq 'dec' && @arg == 1)
+  elsif ($cmd eq 'inc' && @arg == 1)
   {
     cmd $line, $adr, 11, @arg, undef, 1;
   }
-  elsif ($cmd eq 'dec' && @arg == 2)
+  elsif ($cmd eq 'inc' && @arg == 2)
   {
     cmd $line, $adr, 11, $arg[0], undef, $arg[1];
   }
+  elsif ($cmd eq 'dec' && @arg == 1)
+  {
+    cmd $line, $adr, 12, @arg, undef, 1;
+  }
+  elsif ($cmd eq 'dec' && @arg == 2)
+  {
+    cmd $line, $adr, 12, $arg[0], undef, $arg[1];
+  }
   elsif ($cmd eq 'cpi' && @arg == 3)
   {
-    cmd $line, $adr, 12, @arg;
+    cmd $line, $adr, 13, @arg;
   }
   elsif ($cmd eq 'cpy' && @arg == 3)
   {
-    cmd $line, $adr, 13, @arg;
+    cmd $line, $adr, 14, @arg;
   }
   else
   {

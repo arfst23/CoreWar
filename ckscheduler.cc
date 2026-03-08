@@ -19,7 +19,7 @@ public:
   void set(int address, int uid)
   { }
 
-  void setexec(int address)
+  void setexec(int address, int uid)
   { }
 
   bool check()
@@ -41,8 +41,8 @@ int main()
   batch.init();
 
   Scheduler<Batch> scheduler(batch);
-  Address adr[Redcode::users] = { 0, 256 };
-  scheduler.init(adr);
+  Address adr[2] = { 0, 256 };
+  scheduler.init(adr, 2);
 
   // 0 0 0->1
   assert(scheduler.turn() == 0);

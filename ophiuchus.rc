@@ -8,7 +8,7 @@ dist = 19 * width
 dst = src - dist
 len = end - src
 base = cnt + dist
-copies = 8
+copies = 11
 
 ################################################################################
 

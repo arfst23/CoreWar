@@ -1,8 +1,8 @@
 ################################################################################
 
 width = 256
-range = 5 * width
-dist = 15 * width
+range = 8 * width
+dist = 16 * width
 
 single = 18
 double = 2 * single

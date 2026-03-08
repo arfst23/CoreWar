@@ -1,0 +1,47 @@
+################################################################################
+
+width = 256
+range = width * 33
+
+dist = width * 32
+step = 16
+
+################################################################################
+
+len = end - src
+dst = src + dist
+max = src + dist - step - 1
+
+src:
+  set cnt, step
+clr:
+  cpi end, hlt, cnt
+  inc cnt, step
+  cpi end, hlt, cnt
+  inc cnt, step
+  jle clr, cnt, max
+
+  set cnt, 0
+cpy:
+  cpy dst, src, cnt
+  inc cnt
+  cpy dst, src, cnt
+  inc cnt
+  jle cpy, cnt, len
+
+  fkj dst
+
+  set cnt, step + (step / 2)
+clr2:
+  cpi end, hlt, cnt
+  inc cnt, step
+  cpi end, hlt, cnt
+  inc cnt, step
+  jle clr2, cnt, max
+
+end:
+cnt:
+hlt:
+  dat
+
+################################################################################

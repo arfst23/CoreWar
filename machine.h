@@ -9,6 +9,8 @@
 #include "memory.h"
 #include "address.h"
 
+#include <stdio.h>
+
 //******************************************************************************
 
 template <typename Controler>
@@ -25,6 +27,7 @@ public:
 
 private:
 
+  int users;
   Controler &controler;
   Memory<Controler> memory;
   Scheduler<Controler> scheduler;
@@ -38,13 +41,13 @@ private:
     memory.init();
 
     Address adr[Redcode::users];
-    if (Redcode::users == 1)
+    if (users == 1)
       adr[0] = Redcode::height / 3 * Redcode::width + Redcode::width / 3;
     else
     {
       adr[0] = rand() % Redcode::size;
       adr[1] = adr[0]() + Redcode::range + rand() % (Redcode::size - 2 * Redcode::range);
-      if (Redcode::users > 2)
+      if (users > 2)
       {
 	int dist0, dist1;
 	if (adr[0]() < adr[1]())
@@ -64,10 +67,10 @@ private:
       }
     }
 
-    for (int uid = 0; uid < Redcode::users; uid++)
+    for (int uid = 0; uid < users; uid++)
       memory.load(uid, adr[uid], loader[uid].program(), loader[uid].length());
 
-    scheduler.init(adr);
+    scheduler.init(adr, users);
     controler.check();
   }
 
@@ -76,7 +79,8 @@ public:
   Machine(Controler &ctl, char *const *name)
     : controler(ctl), memory(ctl), scheduler(ctl), processor(memory, scheduler)
   {
-    for (int uid = 0; uid < Redcode::users; uid++)
+    for (users = 0; name[users]; users++);
+    for (int uid = 0; uid < Redcode::users && name[uid]; uid++)
       loader[uid].load(name[uid]);
   }
 
@@ -90,7 +94,7 @@ public:
 	return shutdown;
 
       int uids = scheduler.uids();
-      if (Redcode::users > 1 && uids == 1)
+      if (users > 1 && uids == 1)
 	return scheduler.uid();
       if (uids == 0)
 	return terminate;

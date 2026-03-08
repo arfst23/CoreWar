@@ -5,7 +5,7 @@ range = 18 * width
 third = range / 3
 half = range / 2
 step = 36
-max = 9
+max = 11
 
 dist = range + width
 dst = src - dist

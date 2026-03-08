@@ -27,11 +27,10 @@ mars: mars.o loader.o
 	$(REASON)
 	$(LINK.cc) -o $@ $^ $(LDLIBS)
 
-rx: ahoy.rx andromeda.rx apollo.rx aquarius.rx argon.rx discordia.rx erebos.rx \
-  gemini.rx gondwana.rx horus.rx janus.rx krypton.rx laniakea.rx mercury.rx \
-  nemesis.rx okapi.rx omicron.rx ophiuchus.rx orion.rx pandora.rx pangea.rx \
-  phoebus.rx prometheus.rx sirius.rx sixtus.rx sojus.rx sputnik.rx taifun.rx \
-  thunder.rx xenon.rx zodiak.rx zyclon.rx
+REDCODE = $(wildcard *.rc)
+REDEXEC = $(patsubst %.rc, %.rx, $(REDCODE))
+
+rx: $(REDEXEC)
 
 ################################################################################
 
@@ -81,6 +80,10 @@ test: cknumber ckaddress ckmemory ckscheduler ckprocessor ckloader ckloader.rx
 	ckprocessor
 
 ################################################################################
+
+init:
+	$(REASON)
+	chmod +x rcas turnament evaluate turnament3 evaluate3
 
 deps depend:
 	$(REASON)

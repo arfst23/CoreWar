@@ -27,14 +27,16 @@ public:
     int line = memory.line(adr);
     int cmd = memory.cmd(adr);
 
+
     switch (cmd)
     {
       case 0: // dat
       {
 	if (Redcode::trace)
-	  printf("[%d:%04d] %05d  %03d: dat -> abort\n",
+	  printf("[%d:%04d] %05d %03d: dat -> abort\n",
 	    uid, pid, adr(), line);
 
+	memory.reset(adr);
 	return scheduler.abort();
       }
 
@@ -43,9 +45,8 @@ public:
 	Address dst(adr);
 	dst.add(memory.dst(adr));
 	int frk = scheduler.fork(dst);
-	adr.add(1);
 
-	if (frk)
+	if (frk >= 0)
 	{
 	  if (Redcode::trace)
 	    printf("[%d:%04d] %05d  %03d: frk %d/%05d -> [%02d]\n",
@@ -56,10 +57,39 @@ public:
 	    printf("[%d:%04d] %05d  %03d: frk %d/%05d -> no more processes\n",
 	      uid, pid, adr(), line, memory.dst(adr)(), dst());
 
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
-      
-      case 2: // jmp
+
+      case 2: // fkj
+      {
+	Address dst(adr);
+	dst.add(memory.dst(adr));
+	int frk = scheduler.fork(dst);
+
+	if (frk >= 0)
+	{
+	  Address nxt(adr);
+	  nxt.add(1);
+	  if (Redcode::trace)
+	    printf("[%d:%04d] %05d  %03d: fkj %d/%05d -> [%02d]\n",
+	      uid, pid, adr(), line, memory.dst(adr)(), dst(), frk);
+	  memory.reset(adr);
+	  return scheduler.next(nxt);
+	}
+	else
+	{
+	  if (Redcode::trace)
+	    printf("[%d:%04d] %05d  %03d: fkj %d/%05d -> no more processes\n",
+	      uid, pid, adr(), line, memory.dst(adr)(), dst());
+	  memory.reset(adr);
+	  return scheduler.next(dst);
+	}
+      }
+
+      case 3: // jmp
       {
 	Address dst(adr);
 	dst.add(memory.dst(adr));
@@ -68,10 +98,11 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jmp %d/%05d\n",
 	    uid, pid, adr(), line, memory.dst(adr)(), dst());
 
+	memory.reset(adr);
 	return scheduler.next(dst);
       }
       
-      case 3: // jlt
+      case 4: // jlt
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -86,6 +117,7 @@ public:
 	      uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)(),
 	      memory.dst(adr)(), dst());
 	  
+	  memory.reset(adr);
 	  return scheduler.next(dst);
 	}
 	
@@ -93,11 +125,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jlt %d/%05d %d < %d -> cont\n",
 	    uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 4: // jle
+      case 5: // jle
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -112,6 +146,7 @@ public:
 	      uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)(),
 	      memory.dst(adr)(), dst());
 	  
+	  memory.reset(adr);
 	  return scheduler.next(dst);
 	}
 	
@@ -119,11 +154,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jle %d/%05d %d <= %d -> cont\n",
 	    uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 5: // jgt
+      case 6: // jgt
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -138,6 +175,7 @@ public:
 	      uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)(),
 	      memory.dst(adr)(), dst());
 	  
+	  memory.reset(adr);
 	  return scheduler.next(dst);
 	}
 	
@@ -145,11 +183,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jgt %d/%05d %d > %d -> cont\n",
 	    uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 6: // jge
+      case 7: // jge
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -164,6 +204,7 @@ public:
 	      uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)(),
 	      memory.dst(adr)(), dst());
 	  
+	  memory.reset(adr);
 	  return scheduler.next(dst);
 	}
 	
@@ -171,11 +212,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jge %d/%05d %d >= %d -> cont\n",
 	    uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 7: // jeq
+      case 8: // jeq
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -190,6 +233,7 @@ public:
 	      uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)(),
 	      memory.dst(adr)(), dst());
 	  
+	  memory.reset(adr);
 	  return scheduler.next(dst);
 	}
 	
@@ -197,11 +241,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jeq %d/%05d %d == %d -> cont\n",
 	    uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 8: // jne
+      case 9: // jne
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -216,6 +262,7 @@ public:
 	      uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)(),
 	      memory.dst(adr)(), dst());
 
+	  memory.reset(adr);
 	  return scheduler.next(dst);
 	}
 	
@@ -223,11 +270,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: jne %d/%05d %d != %d -> cont\n",
 	    uid, pid, adr(), line, memory.src(adr)(), src(), val(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 9: // set
+      case 10: // set
       {
 	Address dst(adr);
 	dst.add(memory.dst(adr));
@@ -237,11 +286,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: set %d/%05d -> %d\n",
 	    uid, pid, adr(), line, memory.dst(adr)(), dst(), memory.val(adr)());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 10: // inc
+      case 11: // inc
       {
 	Address dst(adr);
 	dst.add(memory.dst(adr));
@@ -255,11 +306,13 @@ public:
 	  printf("[%d:%04d] %05d  %03d: inc %d/%05d %d -> %d\n",
 	    uid, pid, adr(), line, memory.dst(adr)(), dst(), src(), val());
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 11: // dec
+      case 12: // dec
       {
 	Address dst(adr);
 	dst.add(memory.dst(adr));
@@ -268,16 +321,18 @@ public:
 	Number sub = memory.val(adr);
 	val.sub(sub);
 	memory.set(uid, dst, val);
-	adr.add(1);
 
 	if (Redcode::trace)
 	  printf("[%d:%04d] %05d  %03d: dec %d/%05d %d -> %d\n",
 	    uid, pid, adr(), line, memory.dst(adr)(), dst(), src(), val());
 
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 12: // cpi
+      case 13: // cpi
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -296,11 +351,13 @@ public:
 	    uid, pid, adr(), line, memory.val(adr)(), val(),
 	    memory.src(adr)(), src(), off(), memory.dst(adr)(), dst(), memory.line(src));
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
 
-      case 13: // cpy
+      case 14: // cpy
       {
 	Address src(adr);
 	src.add(memory.src(adr));
@@ -320,8 +377,10 @@ public:
 	    uid, pid, adr(), line, memory.val(adr)(), val(),
 	    off(), memory.src(adr)(), src(), off(), memory.dst(adr)(), dst(), memory.line(src));
 
-	adr.add(1);
-	return scheduler.next(adr);
+	Address nxt(adr);
+	nxt.add(1);
+	memory.reset(adr);
+	return scheduler.next(nxt);
       }
     }
     return false;

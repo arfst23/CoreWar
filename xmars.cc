@@ -11,13 +11,13 @@
 
 int main(int ac, char *av[])
 {
-  assert(ac == Redcode::users + 1);
+  assert(ac >= 2);
+  assert(ac <= Redcode::users + 1);
 
   srand(time(NULL));
 
   Visualizer visualizer;
   Machine<Visualizer> machine(visualizer, av + 1);
-
 
   int turns = 0;
   int count[Redcode::users];
@@ -43,7 +43,7 @@ int main(int ac, char *av[])
       break;
   }
 
-  for (int uid = 0; uid < Redcode::users; uid++)
+  for (int uid = 0; uid < Redcode::users && av[uid + 1]; uid++)
     printf("%s: %d/%d\n", av[uid + 1], count[uid], turns);
 
   return 0;

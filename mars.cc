@@ -21,7 +21,7 @@ public:
   void set(int address, int uid)
   { }
 
-  void setexec(int address)
+  void setexec(int address, int uid)
   { }
 
   bool check()
@@ -39,7 +39,8 @@ public:
 
 int main(int ac, char *av[])
 {
-  assert(ac == Redcode::users + 1);
+  assert(ac >= 3);
+  assert(ac <= Redcode::users + 1);
 
   srand(time(NULL));
 
@@ -70,7 +71,7 @@ int main(int ac, char *av[])
 
   if (Redcode::trace)
     printf("\n");
-  for (int uid = 0; uid < Redcode::users; uid++)
+  for (int uid = 0; uid < Redcode::users && av[uid + 1]; uid++)
     printf("%s: %d\n", av[uid + 1], count[uid]);
 
   return 0;

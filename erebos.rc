@@ -1,9 +1,9 @@
 ################################################################################
 
 width = 256
-dist = 4863 # 19 * width
+dist = 16 * width
 step = 10
-cpys = 9
+cpys = 14
 dest = src - dist
 length = end - src
 cookie = 23

@@ -1,0 +1,74 @@
+################################################################################
+
+width = 256
+range = width * 33
+
+dist = width * 32
+step = 32
+
+frk fwdgo
+jmp bwdgo
+
+################################################################################
+
+bwdlen = bwdend - bwd 
+bwddst = bwd - dist
+bwdmax = bwd - range + step + 1
+
+bwd:
+  set bwdcnt, -step - 16
+bwdclr:
+  cpi bwdend, bwdhlt, bwdcnt
+  dec bwdcnt, step
+  cpi bwdend, bwdhlt, bwdcnt
+  dec bwdcnt, step
+  jge bwdclr, bwdcnt, bwdmax
+
+bwdgo:
+  set bwdcnt, 0
+bwdcpy:
+  cpy bwddst, bwd, bwdcnt
+  inc bwdcnt
+  cpy bwddst, bwd, bwdcnt
+  inc bwdcnt
+  jle bwdcpy, bwdcnt, bwdlen
+
+  jmp bwddst
+
+bwdend:
+bwdcnt:
+bwdhlt:
+  dat
+
+################################################################################
+
+fwdlen = fwdend - fwd
+fwddst = fwd + dist
+fwdmax = fwd + range - step - 1
+
+fwd:
+  set fwdcnt, step + 18
+fwdclr:
+  cpi fwdend, fwdhlt, fwdcnt
+  inc fwdcnt, step
+  cpi fwdend, fwdhlt, fwdcnt
+  inc fwdcnt, step
+  jle fwdclr, fwdcnt, fwdmax
+
+fwdgo:
+  set fwdcnt, 0
+fwdcpy:
+  cpy fwddst, fwd, fwdcnt
+  inc fwdcnt
+  cpy fwddst, fwd, fwdcnt
+  inc fwdcnt
+  jle fwdcpy, fwdcnt, fwdlen
+
+  jmp fwddst
+
+fwdend:
+fwdcnt:
+fwdhlt:
+  dat
+
+################################################################################

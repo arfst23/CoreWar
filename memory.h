@@ -64,12 +64,17 @@ public:
 
   void set(int uid, Address dst, Number val)
   {
-    assert(uid >= 0 && uid < Redcode::users);
+    assert(uid >= -1 && uid < Redcode::users);
     if (memory[dst()].uid != uid)
       controler.set(dst(), uid);
     memset(memory + dst(), 0, sizeof(Cell));
     memory[dst()].val = val;
     memory[dst()].uid = uid;
+  }
+
+  void reset(Address dst)
+  {
+    controler.set(dst(), memory[dst()].uid);
   }
 
 //******************************************************************************

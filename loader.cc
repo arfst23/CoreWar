@@ -37,7 +37,7 @@ void Loader::load(const char *name)
     memory[i].uid = 0;
 
     memory[i].cmd = strtol(str + 5, &end, 16);
-    assert(memory[i].cmd <= 13);
+    assert(memory[i].cmd <= 14);
     assert(end == str + 7);
 
     assert(str[7] == ' ');

@@ -26,27 +26,11 @@ class Scheduler
   {
     int adr;
     int pid;
-    int head;
-    int tail;
   };
 
   Proc proc[Redcode::users][Redcode::procs];
 
   Controler &controler;
-
-  void reset()
-  {
-    int i = idx[user];
-    Address tail(proc[user][i].tail);
-    Address head(proc[user][i].head);
-    for (;;)
-    {
-      controler.set(tail(), user);
-      if (tail.eq(head))
-	return;
-      tail.add(1);
-    }
-  }
 
   bool inc()
   {
@@ -56,7 +40,7 @@ class Scheduler
 
     if (users)
       do
-	if (++user >= Redcode::users)
+	if (++user >= users)
 	{
 	  user = 0;
 	  turns++;
@@ -76,24 +60,22 @@ public:
     : controler(c), delay(0)
   { }
 
-  void init(Address *address)
+  void init(Address *address, int u)
   {
-    users = Redcode::users;
+    users = u;
     user = 0;
     nextpid = 0;
     turns = 0;
 
-    for (int uid = 0; uid < Redcode::users; uid++)
+    for (int uid = 0; uid < u; uid++)
     {
       procs[uid] = 1;
       idx[uid] = 0;
 
       proc[uid][0].adr = address[uid]();
       proc[uid][0].pid = nextpid++;
-      proc[uid][0].tail = address[uid]();
-      proc[uid][0].head = address[uid]();
 
-      controler.setexec(address[uid]());
+      controler.setexec(address[uid](), uid);
     }
   }
 
@@ -128,8 +110,6 @@ public:
 
   bool abort()
   {
-    reset();
-
     int i = idx[user];
     int j = procs[user] - 1;
     if (i < j)
@@ -151,10 +131,8 @@ public:
     int i = procs[user]++;
     proc[user][i].adr = adr();
     proc[user][i].pid = nextpid++;
-    proc[user][i].head = adr();
-    proc[user][i].tail = adr();
 
-    controler.setexec(adr());
+    controler.setexec(adr(), user);
     return proc[user][i].pid;
   }
 
@@ -164,30 +142,7 @@ public:
 
     int i = idx[user];
     proc[user][i].adr = adr();
-    Address tail(proc[user][i].tail);
-    Address head(proc[user][i].head);
-    if (!adr.between(tail, head))
-    {
-      tail.add(-1);
-      head.add(1);
-      if (adr.eq(tail()))
-      {
-	proc[user][i].tail = adr();
-	controler.setexec(adr());
-      }
-      else if (adr.eq(head()))
-      {
-	proc[user][i].head = adr();
-	controler.setexec(adr());
-      }
-      else
-      {
-	reset();
-	proc[user][i].head = adr();
-	proc[user][i].tail = adr();
-	controler.setexec(adr());
-      }
-    }
+    controler.setexec(adr(), user);
 
     return inc();
   }

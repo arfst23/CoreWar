@@ -8,14 +8,9 @@
 
 enum
 {
-#if 0
-  hscale = 3,
-  vscale = 2,
-#else
   hscale = 4,
-  vscale = 3,
-#endif
-  offset = 8,
+  vscale = 4,
+  offset = 6,
 
   maxdelay = 32768,
   mindelay = 1,
@@ -37,8 +32,8 @@ enum Color
 Visualizer::Visualizer()
   : delay(defdelay)
 {
-  int width = 2 * offset + hscale * (2 * Redcode::width - 1);
-  int height = 2 * offset + vscale * (2 * Redcode::height - 1);
+  int width = 2 * offset + hscale * (2 * Redcode::width / 2 - 1);
+  int height = 2 * offset + vscale * (2 * Redcode::height / 2 - 1);
 
   std::vector<const char*> colors =
   {
@@ -62,8 +57,8 @@ Visualizer::~Visualizer()
 
 void Visualizer::init()
 {
-  for (int row = 0; row < Redcode::height; row++)
-    for (int col = 0; col < Redcode::width; col++)
+  for (int row = 0; row < Redcode::height / 2; row++)
+    for (int col = 0; col < Redcode::width / 2; col++)
     {
       int x = offset + 2 * hscale * col;
       int y = offset + 2 * vscale * row;
@@ -76,21 +71,23 @@ void Visualizer::set(int address, int uid)
 {
   assert(address >= 0 && address < Redcode::size);
   assert(uid >= -1 && uid < Redcode::users);
-  int row = address / Redcode::width;
-  int col = address % Redcode::width;
+  int row = address / (Redcode::width * 2);
+  int col = address % (Redcode::width * 2);
+  col /= 4;
   int x = offset + 2 * hscale * col;
   int y = offset + 2 * vscale * row;
-  graphix->rect(red + uid, x, y, hscale, vscale);
+  graphix->rect(red + uid, x, y, 2 * hscale, 2 * vscale);
 }
 
 void Visualizer::setexec(int address, int uid)
 {
   assert(address >= 0 && address < Redcode::size);
-  int row = address / Redcode::width;
-  int col = address % Redcode::width;
+  int row = address / (Redcode::width * 2);
+  int col = address % (Redcode::width * 2);
+  col /= 4;
   int x = offset + 2 * hscale * col;
   int y = offset + 2 * vscale * row;
-  graphix->rect(magenta + uid, x, y, hscale, vscale);
+  graphix->rect(magenta + uid, x, y, 2 * hscale, 2 * vscale);
 }
 
 bool Visualizer::check()
