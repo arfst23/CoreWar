@@ -474,90 +474,109 @@ guard:
 ### 2 Players
 
 | Name       | Wins | Score |
-| ---------- | ---- | ----- |
-| omicron    | 100  |   59  |
-| xenon      |  94  |   57  |
-| zyclon     |  82  |   48  |
-| mercury    |  65  |   48  |
-| sixtus     |  54  |   39  |
-| pandora    |  48  |   17  |
-| zodiak     |  37  |   27  |
-| apollo     |  37  |   10  |
-| ophiuchus  |  31  |   21  |
-| nemesis    |  31  |   15  |
-| thunder    |  25  |   19  |
-| laniakea   |  25  |   13  |
-| janus      |  25  |   10  |
-| horus      |  20  |   17  |
-| pangea     |  20  |   12  |
-| gondwana   |  20  |    6  |
-| sojus      |  14  |   16  |
-| erebos     |  14  |   14  |
-| orion      |   8  |   12  |
-| sirius     |   2  |    1  |
-| phoebus    |   2  |   -5  |
-| prometheus |  -2  |    0  |
-| gemini     | - 8  |    4  |
-| delta      | -14  |    0  |
-| andromeda  | -20  |   -6  |
-| argon      | -31  |  -18  |
-| aquarius   | -42  |  -27  |
-| taifun     | -42  |  -34  |
-| okapi      | -48  |  -21  |
-| discordia  | -48  |  -24  |
-| sputnik    | -71  |  -40  |
-| krypton    | -77  |  -47  |
-| ahoy       | -82  |  -74  |
-| dummy      | -85  |  -71  |
-| alpha      | -88  |  -77  |
-| minimal    | -97  |  -28  |
+|------------|------|-------|
+| omicron    |   90 |   56  |
+| zyclon     |   86 |   58  |
+| xenon      |   81 |   53  |
+| mercury    |   72 |   51  |
+| cyan       |   68 |   33  |
+| pandora    |   52 |   27  |
+| janus      |   50 |   26  |
+| horus      |   45 |   37  |
+| erebos     |   45 |   21  |
+| sojus      |   43 |   22  |
+| orion      |   40 |   34  |
+| thunder    |   40 |   24  |
+| nemesis    |   38 |   16  |
+| zodiak     |   36 |   28  |
+| magenta    |   36 |   21  |
+| sixtus     |   34 |   34  |
+| gondwana   |   34 |   16  |
+| ophiuchus  |   31 |   22  |
+| laniakea   |   27 |   22  |
+| gemini     |   22 |   11  |
+| pangea     |   18 |   12  |
+| prometheus |   18 |    5  |
+| sirius     |   11 |    4  |
+| amber      |   -2 |    1  |
+| delta      |   -4 |    3  |
+| nautilus   |   -4 |    0  |
+| phoebus    |   -6 |    0  |
+| andromeda  |  -11 |   -4  |
+| argon      |  -20 |  -13  |
+| agua       |  -20 |  -15  |
+| purple     |  -22 |  -11  |
+| taifun     |  -34 |  -21  |
+| okapi      |  -40 |  -17  |
+| discordia  |  -40 |  -17  |
+| sputnik    |  -45 |  -27  |
+| krypton    |  -63 |  -32  |
+| apollo     |  -65 |  -24  |
+| ahoy       |  -68 |  -64  |
+| alpha      |  -68 |  -65  |
+| ckloader   |  -77 |  -62  |
+| loop       |  -84 |  -29  |
+| dummy      |  -84 |  -59  |
+| forward    |  -84 |  -80  |
+| backward   |  -86 |  -79  |
+| run        |  -90 |  -24  |
 
 ### 3 Players
 
 | Name       | Wins | Score |
-| ---------- | ---- | ----- |
-| omicron    |  90  |   74  |
-| xenon      |  84  |   69  |
-| zyclon     |  70  |   54  |
-| mercury    |  63  |   51  |
-| sixtus     |  46  |   35  |
-| erebos     |  39  |   22  |
-| apollo     |  37  |   14  |
-| prometheus |  36  |    8  |
-| nemesis    |  35  |   18  |
-| zodiak     |  33  |   23  |
-| pandora    |  32  |   15  |
-| sojus      |  21  |   15  |
-| ophiuchus  |  20  |   14  |
-| janus      |  20  |   10  |
-| thunder    |  17  |   14  |
-| pangea     |  13  |    9  |
-| orion      |  12  |   10  |
-| horus      |  10  |   10  |
-| gemini     |   9  |    7  |
-| laniakea   |   9  |    6  |
-| gondwana   |   0  |    2  |
-| sirius     |  -5  |   -6  |
-| delta      |  -7  |   -5  |
-| phoebus    | -20  |  -17  |
-| andromeda  | -22  |  -13  |
-| argon      | -24  |  -18  |
-| discordia  | -26  |  -18  |
-| aquarius   | -30  |  -21  |
-| taifun     | -50  |  -33  |
-| okapi      | -53  |  -32  |
-| sputnik    | -64  |  -46  |
-| krypton    | -69  |  -51  |
-| minimal    | -71  |  -19  |
-| dummy      | -80  |  -62  |
-| ahoy       | -84  |  -71  |
-| alpha      | -87  |  -69  |
+|------------|------|-------|
+| omicron    |   87 |    8  |
+| xenon      |   79 |    6  |
+| zyclon     |   77 |    7  |
+| cyan       |   67 |    3  |
+| mercury    |   64 |    5  |
+| orion      |   53 |    4  |
+| janus      |   46 |    3  |
+| prometheus |   45 |    1  |
+| pandora    |   42 |    3  |
+| erebos     |   41 |    2  |
+| horus      |   40 |    3  |
+| zodiak     |   39 |    2  |
+| sixtus     |   38 |    3  |
+| nemesis    |   33 |    2  |
+| thunder    |   32 |    2  |
+| sojus      |   28 |    1  |
+| ophiuchus  |   28 |    1  |
+| gemini     |   22 |    1  |
+| pangea     |   22 |    1  |
+| gondwana   |   18 |    1  |
+| laniakea   |   17 |    1  |
+| magenta    |   14 |    0  |
+| sirius     |   -4 |    0  |
+| amber      |   -4 |    0  |
+| delta      |   -8 |    0  |
+| phoebus    |  -10 |    0  |
+| argon      |  -11 |   -1  |
+| discordia  |  -13 |   -1  |
+| nautilus   |  -14 |   -1  |
+| purple     |  -18 |   -1  |
+| andromeda  |  -21 |   -1  |
+| agua       |  -22 |   -1  |
+| loop       |  -29 |   -1  |
+| taifun     |  -29 |   -2  |
+| okapi      |  -40 |   -2  |
+| sputnik    |  -41 |   -3  |
+| run        |  -46 |   -1  |
+| krypton    |  -50 |   -4  |
+| apollo     |  -51 |   -2  |
+| dummy      |  -65 |   -5  |
+| backward   |  -71 |   -6  |
+| forward    |  -71 |   -6  |
+| ahoy       |  -71 |   -6  |
+| ckloader   |  -72 |   -5  |
+| alpha      |  -74 |   -6  |
+
 
 ## Build
 
 ### Configure
 
-`visualizer.h`:
+`visualizer.cc`:
 
 For QHD 2560x1440 screen resolution set
 ```
@@ -576,13 +595,6 @@ For FHD 1920x1080 screen resolution set
 To enable runtime traces set
 ```
   trace = 1,
-```
-
-Define the number of programs to run
-```
-  users = 1,
-  users = 2,
-  users = 3,
 ```
 
 ### Build
