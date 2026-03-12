@@ -1,0 +1,18 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my @files = @ARGV;
+my $max = @files - 1;
+
+foreach my $a (0 .. $max - 1)
+{
+  my $aa = $files[$a];
+  foreach my $b ($a + 1 .. $max)
+  {
+    my $bb = $files[$b];
+
+    my $batch = `mars $aa $bb`;
+    print "$batch\n";
+  }
+}

@@ -81,10 +81,6 @@ test: cknumber ckaddress ckmemory ckscheduler ckprocessor ckloader ckloader.rx
 
 ################################################################################
 
-init:
-	$(REASON)
-	chmod +x rcas turnament evaluate turnament3 evaluate3
-
 deps depend:
 	$(REASON)
 	$(CC) -MM $(CFLAGS) *.cc > deps

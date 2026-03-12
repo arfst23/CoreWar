@@ -1,0 +1,136 @@
+################################################################################
+
+width = 256
+dist = 32 * 256
+step = 32
+
+frk bwd1
+frk fwd2
+frk bwdgo2
+jmp fwdgo1
+
+################################################################################
+
+bwdlen1 = bwdend1 - bwd1 
+bwddst1 = bwd1 - dist
+
+bwd1:
+  set bwdcnt1, -step - 2
+bwdclr1:
+  cpi bwdend1, bwdhlt1, bwdcnt1
+  cpi bwdend1 - step, bwdhlt1, bwdcnt1
+  cpi bwdend1 - 2 * step, bwdhlt1, bwdcnt1
+  cpi bwdend1 - 3 * step, bwdhlt1, bwdcnt1
+  dec bwdcnt1, 4 * step
+  jge bwdclr1, bwdcnt1, bwddst1 + 5 * step
+
+bwdgo1:
+  set bwdcnt1, 0
+bwdcpy1:
+  cpy bwddst1, bwd1, bwdcnt1
+  cpy bwddst1 + 1, bwd1 + 1, bwdcnt1
+  cpy bwddst1 + 2, bwd1 + 2, bwdcnt1
+  inc bwdcnt1, 3
+  jle bwdcpy1, bwdcnt1, bwdlen1
+
+  jmp bwddst1
+
+bwdend1:
+bwdcnt1:
+bwdhlt1:
+  dat
+
+################################################################################
+
+fwdlen1 = fwdend1 - fwd1
+fwddst1 = fwd1 + dist
+
+fwd1:
+  set fwdcnt1, step + 23
+fwdclr1:
+  cpi fwdend1 + 0 * step, fwdhlt1, fwdcnt1
+  cpi fwdend1 + 1 * step, fwdhlt1, fwdcnt1
+  cpi fwdend1 + 2 * step, fwdhlt1, fwdcnt1
+  cpi fwdend1 + 3 * step, fwdhlt1, fwdcnt1
+  inc fwdcnt1, 4 * step
+  jle fwdclr1, fwdcnt1, fwddst1 - 5 * step
+
+fwdgo1:
+  set fwdcnt1, 0
+fwdcpy1:
+  cpy fwddst1 + 0, fwd1 + 0, fwdcnt1
+  cpy fwddst1 + 1, fwd1 + 1, fwdcnt1
+  cpy fwddst1 + 2, fwd1 + 2, fwdcnt1
+  inc fwdcnt1, 3
+  jle fwdcpy1, fwdcnt1, fwdlen1
+
+  jmp fwddst1
+
+fwdend1:
+fwdcnt1:
+fwdhlt1:
+  dat
+
+################################################################################
+
+bwdlen2 = bwdend2 - bwd2 
+bwddst2 = bwd2 - dist
+
+bwd2:
+  set bwdcnt2, -step - 16
+bwdclr2:
+  cpi bwdend2 - 0 * step, bwdhlt2, bwdcnt2
+  cpi bwdend2 - 1 * step, bwdhlt2, bwdcnt2
+  cpi bwdend2 - 2 * step, bwdhlt2, bwdcnt2
+  cpi bwdend2 - 3 * step, bwdhlt2, bwdcnt2
+  dec bwdcnt2, 4 * step
+  jge bwdclr2, bwdcnt2, bwddst2 + 5 * step
+
+bwdgo2:
+  set bwdcnt2, 0
+bwdcpy2:
+  cpy bwddst2 + 0, bwd2 + 0, bwdcnt2
+  cpy bwddst2 + 1, bwd2 + 1, bwdcnt2
+  cpy bwddst2 + 2, bwd2 + 2, bwdcnt2
+  inc bwdcnt2, 3
+  jle bwdcpy2, bwdcnt2, bwdlen2
+
+  jmp bwddst2
+
+bwdend2:
+bwdcnt2:
+bwdhlt2:
+  dat
+
+################################################################################
+
+fwdlen2 = fwdend2 - fwd2
+fwddst2 = fwd2 + dist
+
+fwd2:
+  set fwdcnt2, step + 9
+fwdclr2:
+  cpi fwdend2 + 0 * step, fwdhlt2, fwdcnt2
+  cpi fwdend2 + 1 * step, fwdhlt2, fwdcnt2
+  cpi fwdend2 + 2 * step, fwdhlt2, fwdcnt2
+  cpi fwdend2 + 3 * step, fwdhlt2, fwdcnt2
+  inc fwdcnt2, 4 * step
+  jle fwdclr2, fwdcnt2, fwddst2 - 5 * step
+
+fwdgo2:
+  set fwdcnt2, 0
+fwdcpy2:
+  cpy fwddst2 + 0, fwd2 + 0, fwdcnt2
+  cpy fwddst2 + 1, fwd2 + 1, fwdcnt2
+  cpy fwddst2 + 2, fwd2 + 2, fwdcnt2
+  inc fwdcnt2, 3
+  jle fwdcpy2, fwdcnt2, fwdlen2
+
+  jmp fwddst2
+
+fwdend2:
+fwdcnt2:
+fwdhlt2:
+  dat
+
+################################################################################

@@ -1,0 +1,63 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my $turns = 100;
+
+################################################################################
+
+my %wins;
+my %score;
+
+while (<>)
+{
+  my $a = $_;
+  chop $a;
+  my $b = <>;
+  chop $b;
+  $_ = <>;
+
+  my ($an, $ap) = $a =~ /([-\w]+)\.rx: (\d+)/;
+  my ($bn, $bp) = $b =~ /([-\w]+)\.rx: (\d+)/;
+
+  if ($ap > $bp)
+  {
+    $wins{$an}++;
+    $wins{$bn}--;
+  }
+  if ($bp > $ap)
+  {
+    $wins{$bn}++;
+    $wins{$an}--;
+  }
+
+  $score{$an} += $ap - $bp;
+  $score{$bn} += $bp - $ap;
+}
+
+################################################################################
+
+my @keys = keys %wins;
+my $n = @keys - 1;
+
+foreach my $key (keys %wins)
+{
+  $wins{$key} = int(100 * $wins{$key} / $n);
+}
+
+foreach my $key (keys %score)
+{
+  $score{$key} = int(100 * $score{$key} / $n / $turns);
+}
+
+################################################################################
+
+print "| Name       | Wins | Score |\n";
+print "|------------|------|-------|\n";
+
+foreach (sort { $wins{$b} <=> $wins{$a} || $score{$b} <=> $score{$a} } keys %wins)
+{
+  printf "| %-10s |  %3d |  %3d  |\n", $_, $wins{$_}, $score{$_};
+}
+
+################################################################################

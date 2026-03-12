@@ -11,17 +11,17 @@ src:
   set counter, width * (33 - dist)
 clear:
   cpi end, halt, counter
-  inc counter, step
-  cpi end, halt, counter
-  inc counter, step
+  cpi end + step, halt, counter
+  cpi end + 2 * step, halt, counter
+  inc counter, 3 * step
   jle clear, counter, width * 33 - step;
 
   set counter, 0
 copy:
   cpy dst, src, counter
-  inc counter
-  cpy dst, src, counter
-  inc counter
+  cpy dst + 1, src + 1, counter
+  cpy dst + 2, src + 2, counter
+  inc counter, 3
   jle copy, counter, length
 
   jmp dst

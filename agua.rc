@@ -2,7 +2,7 @@
 
 width = 256
 step = 16
-range = -20 * width
+range = -32 * width
 
 jmp go
 
@@ -22,7 +22,10 @@ go:
   set cnt, -step
 loop:
   cpi src, catch, cnt
-  dec cnt, step
+  cpi src - step, catch, cnt
+  cpi src - 2 * step, catch, cnt
+  cpi src - 3 * step, catch, cnt
+  dec cnt, 4 * step
   jge loop, cnt, range
 
 fuse:
@@ -36,20 +39,20 @@ len = end - fwd
 dst = fwd + dist
  
 fwd:
-  set cnt, fwdstep + 2
+  set cnt, fwdstep - 1
 fwdclr:
   cpi end, hlt, cnt
-  inc cnt, fwdstep
-  cpi end, hlt, cnt
-  inc cnt, fwdstep
+  cpi end + fwdstep, hlt, cnt
+  cpi end + 2 * fwdstep, hlt, cnt
+  inc cnt, 3 * fwdstep
   jle fwdclr, cnt, dist
  
   set cnt, 0
 fwdcpy:
   cpy dst, fwd, cnt
-  inc cnt
-  cpy dst, fwd, cnt
-  inc cnt
+  cpy dst + 1, fwd + 1, cnt
+  cpy dst + 2, fwd + 2, cnt
+  inc cnt, 3
   jle fwdcpy, cnt, len
  
   jmp dst

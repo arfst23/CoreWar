@@ -16,17 +16,17 @@ src:
   set cnt, step
 clr:
   cpi end, hlt, cnt
-  inc cnt, step
-  cpi end, hlt, cnt
-  inc cnt, step
+  cpi end + step, hlt, cnt
+  cpi end + 2 * step, hlt, cnt
+  inc cnt, 3 * step
   jle clr, cnt, max
 
   set cnt, 0
 cpy:
   cpy dst, src, cnt
-  inc cnt
-  cpy dst, src, cnt
-  inc cnt
+  cpy dst + 1, src + 1, cnt
+  cpy dst + 2, src + 2, cnt
+  inc cnt, 3
   jle cpy, cnt, len
 
   fkj dst
@@ -34,9 +34,9 @@ cpy:
   set cnt, step + (step / 2)
 clr2:
   cpi end, hlt, cnt
-  inc cnt, step
-  cpi end, hlt, cnt
-  inc cnt, step
+  cpi end + step, hlt, cnt
+  cpi end + 2 * step, hlt, cnt
+  inc cnt, 3 * step
   jle clr2, cnt, max
 
 end:

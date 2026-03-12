@@ -21,18 +21,18 @@ bwd:
   set bwdcnt, -step - 16
 bwdclr:
   cpi bwdend, bwdhlt, bwdcnt
-  dec bwdcnt, step
-  cpi bwdend, bwdhlt, bwdcnt
-  dec bwdcnt, step
+  cpi bwdend - step, bwdhlt, bwdcnt
+  cpi bwdend - 2 * step, bwdhlt, bwdcnt
+  dec bwdcnt, 3 * step
   jge bwdclr, bwdcnt, bwdmax
 
 bwdgo:
   set bwdcnt, 0
 bwdcpy:
   cpy bwddst, bwd, bwdcnt
-  inc bwdcnt
-  cpy bwddst, bwd, bwdcnt
-  inc bwdcnt
+  cpy bwddst + 1, bwd + 1, bwdcnt
+  cpy bwddst + 2, bwd + 2, bwdcnt
+  inc bwdcnt, 3
   jle bwdcpy, bwdcnt, bwdlen
 
   jmp bwddst
@@ -52,18 +52,18 @@ fwd:
   set fwdcnt, step + 18
 fwdclr:
   cpi fwdend, fwdhlt, fwdcnt
-  inc fwdcnt, step
-  cpi fwdend, fwdhlt, fwdcnt
-  inc fwdcnt, step
+  cpi fwdend + step, fwdhlt, fwdcnt
+  cpi fwdend + 2 * step, fwdhlt, fwdcnt
+  inc fwdcnt, 3 * step
   jle fwdclr, fwdcnt, fwdmax
 
 fwdgo:
   set fwdcnt, 0
 fwdcpy:
   cpy fwddst, fwd, fwdcnt
-  inc fwdcnt
-  cpy fwddst, fwd, fwdcnt
-  inc fwdcnt
+  cpy fwddst + 1, fwd + 1, fwdcnt
+  cpy fwddst + 2, fwd + 2, fwdcnt
+  inc fwdcnt, 3
   jle fwdcpy, fwdcnt, fwdlen
 
   jmp fwddst
